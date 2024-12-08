@@ -52,7 +52,7 @@ mod tests {
     #[test]
     fn test_parse_input() {
         let input = advent_of_code::template::read_file("examples", DAY);
-        let (remaining, passports) = parse_input(&input).unwrap();
+        let (remaining, data) = parse_input(&input).unwrap();
 
         assert_eq!("", remaining);
     }
@@ -66,6 +66,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(31));
     }
 }
