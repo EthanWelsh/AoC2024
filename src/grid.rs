@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use itertools::Itertools;
 use num_traits::ToPrimitive;
-use crate::grid::Direction::{E, N, NE, NW, S, SE, SW, W};
+use crate::grid::Direction::{N, E, S, W, NE, SE, NW, SW};
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Hash)]
 pub struct Point {
@@ -21,14 +21,14 @@ impl Point {
 
     pub fn move_direction(&self, dir: &Direction) -> Point {
         match dir {
-            Direction::N => Point::new(self.row - 1, self.col),
-            Direction::S => Point::new(self.row + 1, self.col),
-            Direction::E => Point::new(self.row, self.col + 1),
-            Direction::W => Point::new(self.row, self.col - 1),
-            Direction::NW => Point::new(self.row - 1, self.col - 1),
-            Direction::SW => Point::new(self.row + 1, self.col - 1),
-            Direction::NE => Point::new(self.row - 1, self.col + 1),
-            Direction::SE => Point::new(self.row + 1, self.col + 1),
+            N => Point::new(self.row - 1, self.col),
+            S => Point::new(self.row + 1, self.col),
+            E => Point::new(self.row, self.col + 1),
+            W => Point::new(self.row, self.col - 1),
+            NW => Point::new(self.row - 1, self.col - 1),
+            SW => Point::new(self.row + 1, self.col - 1),
+            NE => Point::new(self.row - 1, self.col + 1),
+            SE => Point::new(self.row + 1, self.col + 1),
         }
     }
 
@@ -76,20 +76,11 @@ where
             }
         }
 
-
         Grid {
             width,
             height,
             data
         }
-    }
-
-    pub fn height(&self) -> usize {
-        self.height
-    }
-
-    pub fn width(&self) -> usize {
-        self.width
     }
 
     pub fn get(&self, point: &Point) -> Option<T> {
