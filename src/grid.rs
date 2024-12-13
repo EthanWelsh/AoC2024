@@ -3,7 +3,7 @@ use itertools::Itertools;
 use num_traits::ToPrimitive;
 use crate::grid::Direction::{N, E, S, W, NE, SE, NW, SW};
 
-#[derive(Debug, PartialEq, Eq, Copy, Clone, Hash)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Hash, Ord, PartialOrd)]
 pub struct Point {
     pub row: i32,
     pub col: i32,
@@ -17,6 +17,14 @@ pub enum Direction {
 impl Point {
     pub fn new(row: i32, col: i32) -> Self {
         Self { row, col }
+    }
+
+    pub fn subtract(&self, point: &Self) -> Point {
+        Point::new(self.row - point.row, self.col - point.col)
+    }
+
+    pub fn add(&self, point: &Point) -> Point {
+        Point::new(self.row + point.row, self.col + point.col)
     }
 
     pub fn move_direction(&self, dir: &Direction) -> Point {

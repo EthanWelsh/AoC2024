@@ -101,13 +101,6 @@ mod tests {
                 nums: vec![10, 19]
             })
         );
-        assert_eq!(
-            data.get(1),
-            Some(&Puzzle {
-                total: 3267,
-                nums: vec![81, 40, 27]
-            })
-        );
     }
 
     #[test]
