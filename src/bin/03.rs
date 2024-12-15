@@ -2,7 +2,7 @@ use crate::Instruction::{Do, Dont, Mult};
 use nom::branch::alt;
 use nom::character::complete::anychar;
 use nom::combinator::map;
-use nom::multi::{many1, many_till, separated_list0};
+use nom::multi::{many1, many_till};
 use nom::sequence::{delimited, separated_pair};
 use nom::{bytes::complete::tag, character::complete, IResult};
 

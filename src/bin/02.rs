@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use nom::character::complete::multispace1;
 use nom::{bytes::complete::tag, character::complete, multi::separated_list1, IResult};
 
 advent_of_code::solution!(2);
