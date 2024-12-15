@@ -1,16 +1,14 @@
 advent_of_code::solution!(1);
 
-use std::collections::HashSet;
 use itertools::Itertools;
+use nom::character::complete::multispace1;
+use nom::sequence::separated_pair;
 use nom::{
-    multi::separated_list1,
     bytes::complete::tag,
     character::complete,
+    multi::separated_list1,
     IResult,
 };
-use nom::character::complete::multispace1;
-use nom::multi::many1;
-use nom::sequence::{separated_pair, tuple};
 use num_traits::abs;
 
 fn parse_input(s: &str) -> IResult<&str, Vec<(i32, i32)>> {
