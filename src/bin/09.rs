@@ -1,16 +1,9 @@
-use itertools::Itertools;
 use nom::character::complete::one_of;
 use nom::combinator::map_res;
 use nom::multi::many1;
-use nom::{IResult, Parser};
+use nom::IResult;
 
 advent_of_code::solution!(9);
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct Block {
-    file_id: Option<usize>,
-    size: usize,
-}
 
 fn parse_input(input: &str) -> IResult<&str, Vec<usize>> {
     many1(map_res(one_of("0123456789"), |c: char| {
