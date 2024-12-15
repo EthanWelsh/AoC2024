@@ -188,7 +188,7 @@ mod tests {
         let (remaining, _) = parse_input(&input).unwrap();
         assert_eq!(remaining, "");
     }
-    
+
     #[test]
     fn test_part_one() {
         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
@@ -200,4 +200,65 @@ mod tests {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(1206));
     }
+
+    #[test]
+    fn test_part_two_1() {
+        let puzzle = "AAAA
+BBCD
+BBCC
+EEEC";
+        let result = part_two(&puzzle);
+        assert_eq!(result, Some(80));
+    }
+
+    #[test]
+    fn test_part_two_2() {
+        let puzzle = "OOOOO
+OXOXO
+OOOOO
+OXOXO
+OOOOO";
+        let result = part_two(&puzzle);
+        assert_eq!(result, Some(436));
+    }
+
+    #[test]
+    fn test_part_two_3() {
+        let puzzle = "EEEEE
+EXXXX
+EEEEE
+EXXXX
+EEEEE";
+        let result = part_two(&puzzle);
+        assert_eq!(result, Some(236));
+    }
+
+    #[test]
+    fn test_part_two_4() {
+        let puzzle = "AAAAAA
+AAABBA
+AAABBA
+ABBAAA
+ABBAAA
+AAAAAA";
+        let result = part_two(&puzzle);
+        assert_eq!(result, Some(368));
+    }
+
+    #[test]
+    fn test_part_two_5() {
+        let puzzle = "RRRRIICCFF
+RRRRIICCCF
+VVRRRCCFFF
+VVRCCCJFFF
+VVVVCJJCFE
+VVIVCCJJEE
+VVIIICJJEE
+MIIIIIJJEE
+MIIISIJEEE
+MMMISSJEEE";
+        let result = part_two(&puzzle);
+        assert_eq!(result, Some(1206));
+    }
+
 }
