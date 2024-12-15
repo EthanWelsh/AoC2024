@@ -1,13 +1,8 @@
 advent_of_code::solution!(11);
 
+use itertools::Itertools;
+use nom::{bytes::complete::tag, character::complete, multi::separated_list1, IResult};
 use std::collections::HashMap;
-use itertools::{iterate, Itertools};
-use nom::{
-    bytes::complete::tag,
-    character::complete,
-    multi::separated_list1,
-    IResult,
-};
 
 fn parse_input(s: &str) -> IResult<&str, Vec<u64>> {
     separated_list1(tag(" "), complete::u64)(s)
@@ -20,7 +15,10 @@ fn has_even_digit_count(stone: &u64) -> bool {
 fn split_stone(stone: &u64) -> Vec<u64> {
     let s = stone.to_string();
     let parts = s.split_at(s.len() / 2);
-    vec![parts.0.parse::<u64>().unwrap(), parts.1.parse::<u64>().unwrap()]
+    vec![
+        parts.0.parse::<u64>().unwrap(),
+        parts.1.parse::<u64>().unwrap(),
+    ]
 }
 
 fn blink(stone: u64, count: u64, new_stones: &mut HashMap<u64, u64>) {
