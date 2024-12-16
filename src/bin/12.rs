@@ -9,6 +9,7 @@ use nom::multi::many1;
 use nom::sequence::terminated;
 use nom::IResult;
 use std::collections::{HashMap, HashSet};
+use std::iter;
 use std::iter::successors;
 
 advent_of_code::solution!(12);
@@ -80,34 +81,14 @@ fn neighbors(grid: &Grid<char>, point: Point) -> Vec<Point> {
         .collect_vec()
 }
 
-fn get_perimeter(
-    grid: &Grid<char>,
-    points: &HashSet<Point>,
-) -> u64 {
+fn get_perimeter(grid: &Grid<char>, points: &HashSet<Point>) -> u64 {
     let current_letter = grid.get(points.iter().next().unwrap()).unwrap();
-    points.iter()
+    points
+        .iter()
         .cartesian_product([N, S, E, W])
         .map(|(p, d)| p.move_direction(&d))
         .filter(|p| grid.get(p) != Some(current_letter))
         .count() as u64
-}
-
-fn expand_horizontal(point: &Point, points: &HashSet<Point>) -> HashSet<Point> {
-    let left = successors(Some(*point), |p| Some(p.move_direction(&W)));
-    let right = successors(Some(*point), |p| Some(p.move_direction(&E)));
-    chain(
-        left.take_while(|p| points.contains(p)),
-        right.take_while(|p| points.contains(p)),
-    ).collect()
-}
-
-fn expand_vertical(point: &Point, points: &HashSet<Point>) -> HashSet<Point> {
-    let up = successors(Some(*point), |p| Some(p.move_direction(&N)));
-    let down = successors(Some(*point), |p| Some(p.move_direction(&S)));
-    chain(
-        up.take_while(|p| points.contains(p)),
-        down.take_while(|p| points.contains(p)),
-    ).collect()
 }
 
 fn get_plot_points(grid: &Grid<char>) -> Vec<HashSet<Point>> {
@@ -138,27 +119,51 @@ pub fn part_one(input: &str) -> Option<u64> {
     Some(ret)
 }
 
-fn get_sides(
-    grid: &Grid<char>,
-    points: &HashSet<Point>,
-) -> u64 {
+fn expand(
+    point: &Point,
+    direction: &Direction,
+    outer_points_and_dir: &HashSet<(Point, Direction)>,
+) -> Vec<Point> {
+    let outer_points: HashSet<Point> = outer_points_and_dir
+        .iter()
+        .filter(|(p, d)| d == direction)
+        .map(|(p, _)| *p)
+        .collect();
+
+    let expand_dirs = match *direction {
+        N | S => [E, W],
+        E | W => [N, S],
+        _ => panic!("invalid direction"),
+    };
+
+    expand_dirs
+        .into_iter()
+        .flat_map(|dir| {
+            let outer_points = outer_points.clone();
+            successors(Some(*point), move |p| {
+                let next = p.move_direction(&dir);
+                outer_points.contains(&next).then_some(next)
+            })
+        })
+        .sorted()
+        .dedup()
+        .collect()
+}
+
+
+fn get_sides(grid: &Grid<char>, points: &HashSet<Point>) -> u64 {
     let current_letter = grid.get(points.iter().next().unwrap()).unwrap();
-    let outer_points_and_dir : HashSet<(Point, Direction)> = points.iter()
+    let outer_points_and_dir: HashSet<(Point, Direction)> = points
+        .iter()
         .cartesian_product([N, S, E, W])
         .map(|(p, d)| (p.move_direction(&d), d))
         .filter(|(p, d)| grid.get(p) != Some(current_letter))
         .collect();
-    let outer_points : HashSet<Point> = outer_points_and_dir.iter().map(|(p, d)| *p).collect();
 
-    let mut sides : HashMap<Direction, HashSet<Vec<Point>>> = HashMap::new();
+    let mut sides: HashMap<Direction, HashSet<Vec<Point>>> = HashMap::new();
     for (p, d) in outer_points_and_dir.iter() {
-        if *d == E || *d == W {
-            let line = expand_vertical(&p, &outer_points).into_iter().sorted().collect_vec();
-            sides.entry(*d).or_insert_with(HashSet::new).insert(line);
-        } else {
-            let line = expand_horizontal(&p, &outer_points).into_iter().sorted().collect_vec();
-            sides.entry(*d).or_insert_with(HashSet::new).insert(line);
-        }
+        let line = expand(p, d, &outer_points_and_dir);
+        sides.entry(*d).or_insert_with(HashSet::new).insert(line);
     }
     sides.values().map(|lines| lines.len()).sum::<usize>() as u64
 }
@@ -261,4 +266,29 @@ MMMISSJEEE";
         assert_eq!(result, Some(1206));
     }
 
+    #[test]
+    fn test_part_two_6() {
+        let puzzle = "RRRRIICCFF
+RRRRIICCCF
+VVRRRCCFFF
+VVRCCCJFFF
+VVVVCJJCFE
+VVIVCCJJEE
+VVIIICJJEE
+MIIIIIJJEE
+MIIISIJEEE
+MMMISSJEEE";
+        let result = part_two(&puzzle);
+        assert_eq!(result, Some(1206));
+    }
+
+    #[test]
+    fn test_part_two_7() {
+        let puzzle = "AAAA
+AABA
+ABBA
+AABA";
+        let result = part_two(&puzzle);
+        assert_eq!(result, Some(176));
+    }
 }
