@@ -1,6 +1,5 @@
 use advent_of_code::grid::Direction::{E, N, S, W};
 use advent_of_code::grid::{Direction, Grid, Point};
-use itertools::chain;
 use itertools::Itertools;
 use nom::branch::alt;
 use nom::character::complete::{line_ending, none_of};
@@ -9,7 +8,6 @@ use nom::multi::many1;
 use nom::sequence::terminated;
 use nom::IResult;
 use std::collections::{HashMap, HashSet};
-use std::iter;
 use std::iter::successors;
 
 advent_of_code::solution!(12);
@@ -150,7 +148,6 @@ fn expand(
         .collect()
 }
 
-
 fn get_sides(grid: &Grid<char>, points: &HashSet<Point>) -> u64 {
     let current_letter = grid.get(points.iter().next().unwrap()).unwrap();
     let outer_points_and_dir: HashSet<(Point, Direction)> = points
@@ -186,6 +183,7 @@ pub fn part_two(input: &str) -> Option<u64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use indoc::indoc;
 
     #[test]
     fn test_parse() {
@@ -208,87 +206,101 @@ mod tests {
 
     #[test]
     fn test_part_two_1() {
-        let puzzle = "AAAA
-BBCD
-BBCC
-EEEC";
-        let result = part_two(&puzzle);
+        let puzzle = indoc! {"
+            AAAA
+            BBCD
+            BBCC
+            EEEC
+        "};
+        let result = part_two(puzzle);
         assert_eq!(result, Some(80));
     }
 
     #[test]
     fn test_part_two_2() {
-        let puzzle = "OOOOO
-OXOXO
-OOOOO
-OXOXO
-OOOOO";
-        let result = part_two(&puzzle);
+        let puzzle = indoc! {"
+            OOOOO
+            OXOXO
+            OOOOO
+            OXOXO
+            OOOOO
+        "};
+        let result = part_two(puzzle);
         assert_eq!(result, Some(436));
     }
 
     #[test]
     fn test_part_two_3() {
-        let puzzle = "EEEEE
-EXXXX
-EEEEE
-EXXXX
-EEEEE";
-        let result = part_two(&puzzle);
+        let puzzle = indoc! {"
+            EEEEE
+            EXXXX
+            EEEEE
+            EXXXX
+            EEEEE
+        "};
+        let result = part_two(puzzle);
         assert_eq!(result, Some(236));
     }
 
     #[test]
     fn test_part_two_4() {
-        let puzzle = "AAAAAA
-AAABBA
-AAABBA
-ABBAAA
-ABBAAA
-AAAAAA";
-        let result = part_two(&puzzle);
+        let puzzle = indoc! {"
+            AAAAAA
+            AAABBA
+            AAABBA
+            ABBAAA
+            ABBAAA
+            AAAAAA
+        "};
+        let result = part_two(puzzle);
         assert_eq!(result, Some(368));
     }
 
     #[test]
     fn test_part_two_5() {
-        let puzzle = "RRRRIICCFF
-RRRRIICCCF
-VVRRRCCFFF
-VVRCCCJFFF
-VVVVCJJCFE
-VVIVCCJJEE
-VVIIICJJEE
-MIIIIIJJEE
-MIIISIJEEE
-MMMISSJEEE";
-        let result = part_two(&puzzle);
+        let puzzle = indoc! {"
+            RRRRIICCFF
+            RRRRIICCCF
+            VVRRRCCFFF
+            VVRCCCJFFF
+            VVVVCJJCFE
+            VVIVCCJJEE
+            VVIIICJJEE
+            MIIIIIJJEE
+            MIIISIJEEE
+            MMMISSJEEE
+        "};
+        let result = part_two(puzzle);
         assert_eq!(result, Some(1206));
     }
 
     #[test]
     fn test_part_two_6() {
-        let puzzle = "RRRRIICCFF
-RRRRIICCCF
-VVRRRCCFFF
-VVRCCCJFFF
-VVVVCJJCFE
-VVIVCCJJEE
-VVIIICJJEE
-MIIIIIJJEE
-MIIISIJEEE
-MMMISSJEEE";
-        let result = part_two(&puzzle);
+        let puzzle = indoc! {"
+            RRRRIICCFF
+            RRRRIICCCF
+            VVRRRCCFFF
+            VVRCCCJFFF
+            VVVVCJJCFE
+            VVIVCCJJEE
+            VVIIICJJEE
+            MIIIIIJJEE
+            MIIISIJEEE
+            MMMISSJEEE
+        "};
+        let result = part_two(puzzle);
         assert_eq!(result, Some(1206));
     }
 
     #[test]
     fn test_part_two_7() {
-        let puzzle = "AAAA
-AABA
-ABBA
-AABA";
-        let result = part_two(&puzzle);
+        let puzzle = indoc! {"
+            AAAA
+            AABA
+            ABBA
+            AABA
+        "};
+        let result = part_two(puzzle);
         assert_eq!(result, Some(176));
     }
 }

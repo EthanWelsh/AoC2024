@@ -33,5 +33,6 @@ indexmap = "2.6.0"
 num-traits = "0.2.17"
 memoize = "0.4.2"
 itertools = "0.13.0"
+indoc = "2.0.5"
 
 # Solution dependencies
