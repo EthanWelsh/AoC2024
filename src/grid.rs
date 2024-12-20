@@ -9,7 +9,7 @@ pub struct Point {
     pub col: i32,
 }
 
-#[derive(Debug, PartialEq, Eq, Copy, Clone, Hash)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Hash, Ord, PartialOrd)]
 pub enum Direction {
     N, E, S, W, NE, SE, NW, SW
 }
@@ -113,7 +113,7 @@ where
             .collect()
     }
 
-    fn find(&self, predicate: fn(T) -> bool) -> Option<Point> {
+    pub fn find(&self, predicate: fn(T) -> bool) -> Option<Point> {
         self.all_points().into_iter().find(|p| {
             self.get(&p).map_or(false, predicate)
         })
