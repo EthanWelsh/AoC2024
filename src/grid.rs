@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use itertools::Itertools;
+use std::iter::once;
 use num_traits::ToPrimitive;
 use crate::grid::Direction::{N, E, S, W, NE, SE, NW, SW};
 
@@ -51,6 +52,10 @@ impl Point {
                 Some(*p)
             })
             .collect()
+    }
+
+    pub fn manhattan_distance(&self, point: &Point) -> u32 {
+        self.row.abs_diff(point.row) + self.col.abs_diff(point.col)
     }
 }
 

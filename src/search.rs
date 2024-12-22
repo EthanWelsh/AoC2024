@@ -1,13 +1,9 @@
 use std::cmp::Reverse;
-use std::collections::{BinaryHeap, HashMap};
+use std::collections::VecDeque;
+use std::collections::{BinaryHeap, HashMap, HashSet};
 use std::hash::Hash;
-use num_traits::Zero;
 
-pub fn dijkstra<N, FN, IN, FS>(
-    start: &N,
-    mut successors: FN, // Made successors mutable
-    mut is_goal: FS,  // Made is_goal mutable
-) -> Option<(N, u64)>
+pub fn dijkstra<N, FN, IN, FS>(start: &N, mut successors: FN, mut is_goal: FS) -> Option<(N, u64)>
 where
     N: Eq + Hash + Clone + Ord,
     FN: FnMut(&N) -> IN,
@@ -29,7 +25,7 @@ where
             continue;
         }
 
-        for (neighbor, cost) in successors(&current) { // Call mutable successors here
+        for (neighbor, cost) in successors(&current) {
             let new_dist = current_dist + cost;
             if new_dist < *distances.entry(neighbor.clone()).or_insert(u64::MAX) {
                 distances.insert(neighbor.clone(), new_dist);
@@ -99,4 +95,30 @@ where
     }
 
     None
+}
+
+pub fn distance_to_goal<N, FN, IN>(goal: &N, successors: FN) -> HashMap<N, u64>
+where
+    N: Eq + Hash + Clone + Ord,
+    FN: Fn(&N) -> IN,
+    IN: IntoIterator<Item = (N, u64)>,
+{
+    let mut distances: HashMap<N, u64> = HashMap::new();
+
+    let mut queue: BinaryHeap<(N, u64)> = BinaryHeap::new();
+    queue.push((goal.clone(), 0));
+
+    while let Some((current, current_cost)) = queue.pop() {
+        if distances.contains_key(&current) {
+            continue;
+        } else {
+            distances.insert(current.clone(), current_cost);
+        }
+
+        for (succ, cost_to_travel) in successors(&current) {
+            queue.push((succ, current_cost + cost_to_travel));
+        }
+    }
+
+    distances
 }
